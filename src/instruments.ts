@@ -109,7 +109,7 @@ export const PITCH_MAP = {
   B8: 7902.13,
 };
 
-export type InstrumentName = "trombone" | "saxophone" | "flute" | "french-horn";
+export type InstrumentName = "trombone" | "saxophone" | "flute" | "chair";
 
 export const INSTRUMENT_RANGES = {
   trombone: {
@@ -120,7 +120,7 @@ export const INSTRUMENT_RANGES = {
     min: PITCH_MAP["C#3/Db3"],
     max: PITCH_MAP["G#5/Ab5"],
   },
-  "french-horn": {
+  chair: {
     min: PITCH_MAP["A1"],
     max: PITCH_MAP["F5"],
   },
@@ -220,6 +220,6 @@ export const FLUTE_URLS = {
 export const URLS_BY_INSTRUMENT = {
   trombone: TROMBONE_URLS,
   saxophone: SAXOPHONE_URLS,
-  "french-horn": FRENCH_HORN_URLS,
+  chair: FRENCH_HORN_URLS,
   flute: FLUTE_URLS,
 } as const satisfies Record<InstrumentName, Record<string, string>>;
