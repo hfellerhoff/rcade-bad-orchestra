@@ -9,6 +9,7 @@ import {
   INSTRUMENT_RANGES,
   SAXOPHONE_URLS,
   TROMBONE_URLS,
+  URLS_BY_INSTRUMENT,
   type InstrumentName,
 } from "./instruments";
 
@@ -80,44 +81,16 @@ function assignInstrument(
 ) {
   state.instrument?.disconnect();
 
-  if (instrumentName === "trombone") {
-    state.instrument = new Tone.Sampler({
-      urls: TROMBONE_URLS,
-      onerror: (err) => {
-        console.log(err);
-      },
-      onload: () => {
-        console.log("loaded!");
-      },
-      volume: 0.5,
-    }).toDestination();
-  }
-
-  if (instrumentName === "saxophone") {
-    state.instrument = new Tone.Sampler({
-      urls: SAXOPHONE_URLS,
-      onerror: (err) => {
-        console.log(err);
-      },
-      onload: () => {
-        console.log("loaded!");
-      },
-      volume: 0.5,
-    }).toDestination();
-  }
-
-  if (instrumentName === "flute") {
-    state.instrument = new Tone.Sampler({
-      urls: SAXOPHONE_URLS,
-      onerror: (err) => {
-        console.log(err);
-      },
-      onload: () => {
-        console.log("loaded!");
-      },
-      volume: 0.5,
-    }).toDestination();
-  }
+  state.instrument = new Tone.Sampler({
+    urls: URLS_BY_INSTRUMENT[instrumentName],
+    onerror: (err) => {
+      console.log(err);
+    },
+    onload: () => {
+      console.log("loaded!");
+    },
+    volume: 0.5,
+  }).toDestination();
 
   imageElement.src = `/${instrumentName}.png`;
   state.instrumentName = instrumentName;
