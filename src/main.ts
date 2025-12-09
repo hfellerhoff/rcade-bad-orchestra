@@ -94,6 +94,8 @@ function assignInstrument(
 
   imageElement.src = `/${instrumentName}.png`;
   state.instrumentName = instrumentName;
+  state.position = 50;
+  state.previousPosition = 0;
 }
 
 on("inputStart", (input) => {
