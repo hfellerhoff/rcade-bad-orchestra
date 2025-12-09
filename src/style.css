@@ -1,0 +1,57 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 336px;
+    height: 262px;
+    overflow: hidden;
+    background-color: #1a1a2e;
+    color: #eee;
+    font-family: system-ui, sans-serif;
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+    font-size: 0.5rem;
+    background-color: #1a1a2e;
+    color: #eee;
+}
+
+#instrument {
+    width: 50%;
+    height: 64px;
+    object-fit: fill;
+}
+
+.playing {
+    animation: shake 0.1s infinite;
+}
+
+@keyframes shake {
+    from {
+        transform: rotate(6deg);
+    }
+
+    to {
+        transform: translateX(-6deg);
+    }
+}
