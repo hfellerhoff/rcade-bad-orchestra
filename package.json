@@ -1,22 +1,22 @@
 {
-    "name": "trombone",
-    "private": false,
-    "version": "1.0.0",
-    "description": "trombone",
-    "type": "module",
-    "scripts": {
-        "dev": "concurrently \"vite --port 5173 --strictPort\" \"rcade dev http://localhost:5173\"",
-        "build": "vite build"
-    },
-    "devDependencies": {
-        "concurrently": "^9.0.0",
-        "rcade": "^0.0.40",
-        "typescript": "~5.9.3",
-        "vite": "^7.2.4"
-    },
-    "dependencies": {
-        "@rcade/plugin-input-classic": "^0.2.1",
-        "@rcade/plugin-input-spinners": "^0.1.8",
-        "tone": "^15.1.22"
-    }
+  "name": "bad-orchestra",
+  "private": false,
+  "version": "1.0.0",
+  "description": "bad-orchestra",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"vite --port 5173 --strictPort\" \"rcade dev http://localhost:5173\"",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0",
+    "rcade": "^0.0.40",
+    "typescript": "~5.9.3",
+    "vite": "^7.2.4"
+  },
+  "dependencies": {
+    "@rcade/plugin-input-classic": "^0.2.1",
+    "@rcade/plugin-input-spinners": "^0.1.8",
+    "tone": "^15.1.22"
+  }
 }

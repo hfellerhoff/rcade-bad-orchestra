@@ -1,8 +1,8 @@
 {
   "$schema": "https://rcade.dev/manifest.schema.json",
-  "name": "music",
-  "display_name": "Trombone",
-  "description": "trombone",
+  "name": "bad-orchestra",
+  "display_name": "Bad Orchestra",
+  "description": "well, I said it was bad",
   "visibility": "public",
   "authors": {
     "display_name": "Henry"
