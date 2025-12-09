@@ -40,10 +40,7 @@ function positionToFrequency(
 ): number {
   const { min, max } = INSTRUMENT_RANGES[instrumentName];
 
-  console.log(min, max, x);
-
   const value = min * Math.pow(max / min, x / 100);
-  console.log(value);
   return value;
 }
 
@@ -109,12 +106,24 @@ function assignInstrument(
     }).toDestination();
   }
 
+  if (instrumentName === "flute") {
+    state.instrument = new Tone.Sampler({
+      urls: SAXOPHONE_URLS,
+      onerror: (err) => {
+        console.log(err);
+      },
+      onload: () => {
+        console.log("loaded!");
+      },
+      volume: 0.5,
+    }).toDestination();
+  }
+
   imageElement.src = `/${instrumentName}.png`;
   state.instrumentName = instrumentName;
 }
 
 on("inputStart", (input) => {
-  console.log(input.button);
   if (input.player === 1 && input.pressed && input.button === "A") {
     instrument_1_element.classList.add("playing");
   }
@@ -294,7 +303,6 @@ function update() {
 
       player_1_state.instrument.triggerAttack(currentFrequency);
 
-      // console.log(previousFrequency, currentFrequency);
       if (player_1_state.position !== player_1_state.previousPosition) {
         player_1_state.instrument?.triggerRelease(previousFrequency);
         player_1_state.instrument?.triggerAttack(currentFrequency);
@@ -312,7 +320,6 @@ function update() {
 
       player_2_state.instrument.triggerAttack(currentFrequency);
 
-      // console.log(previousFrequency, currentFrequency);
       if (player_2_state.position !== player_2_state.previousPosition) {
         player_2_state.instrument?.triggerRelease(previousFrequency);
         player_2_state.instrument?.triggerAttack(currentFrequency);
