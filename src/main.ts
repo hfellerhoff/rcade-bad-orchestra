@@ -5,24 +5,46 @@ import {
   PLAYER_2 as PLAYER_2_SPINNER,
 } from "@rcade/plugin-input-spinners";
 import * as Tone from "tone";
-import { TROMBONE_URLS } from "./instruments";
+import {
+  INSTRUMENT_RANGES,
+  SAXOPHONE_URLS,
+  TROMBONE_URLS,
+  type InstrumentName,
+} from "./instruments";
 
 const overlay = document.querySelector<HTMLDivElement>("#overlay")!;
 const instrument_1_element =
-  document.querySelector<HTMLDivElement>("#instrument-1")!;
+  document.querySelector<HTMLImageElement>("#instrument-1")!;
 const instrument_2_element =
-  document.querySelector<HTMLDivElement>("#instrument-2")!;
+  document.querySelector<HTMLImageElement>("#instrument-2")!;
+
+const instrument_chooser_1_element = document.querySelector(
+  "#instrument-chooser-1",
+)!;
+const instrument_chooser_2_element = document.querySelector(
+  "#instrument-chooser-2",
+)!;
+
+const player_1_instrument_options = Array.from(
+  document.querySelectorAll(".instrument-option-1")!,
+);
+const player_2_instrument_options = Array.from(
+  document.querySelectorAll(".instrument-option-2")!,
+);
 
 let gameStarted = false;
 
-const NOTE_E2 = 82.41;
-const NOTE_Bb4 = 466.16;
+function positionToFrequency(
+  x: number,
+  instrumentName: InstrumentName,
+): number {
+  const { min, max } = INSTRUMENT_RANGES[instrumentName];
 
-const MIN_NOTE = NOTE_E2;
-const MAX_NOTE = NOTE_Bb4;
+  console.log(min, max, x);
 
-function mapToFrequencyLog(x: number): number {
-  return MIN_NOTE * Math.pow(MAX_NOTE / MIN_NOTE, x);
+  const value = min * Math.pow(max / min, x / 100);
+  console.log(value);
+  return value;
 }
 
 function clampPositon(x: number) {
@@ -35,45 +57,201 @@ function clampPositon(x: number) {
 }
 
 type PlayerState = {
+  instrumentName: InstrumentName;
   instrument: Tone.Sampler | undefined;
   position: number;
   previousPosition: number;
 };
 
 const player_1_state: PlayerState = {
+  instrumentName: "trombone",
   instrument: undefined,
   position: 50,
   previousPosition: 0,
 };
 const player_2_state: PlayerState = {
+  instrumentName: "trombone",
   instrument: undefined,
   position: 50,
   previousPosition: 0,
 };
 
-function positionToFrequency(pos: number) {
-  return mapToFrequencyLog(pos / 100);
+function assignInstrument(
+  instrumentName: InstrumentName,
+  state: PlayerState,
+  imageElement: HTMLImageElement,
+) {
+  state.instrument?.disconnect();
+
+  if (instrumentName === "trombone") {
+    state.instrument = new Tone.Sampler({
+      urls: TROMBONE_URLS,
+      onerror: (err) => {
+        console.log(err);
+      },
+      onload: () => {
+        console.log("loaded!");
+      },
+      volume: 0.5,
+    }).toDestination();
+  }
+
+  if (instrumentName === "saxophone") {
+    state.instrument = new Tone.Sampler({
+      urls: SAXOPHONE_URLS,
+      onerror: (err) => {
+        console.log(err);
+      },
+      onload: () => {
+        console.log("loaded!");
+      },
+      volume: 0.5,
+    }).toDestination();
+  }
+
+  imageElement.src = `/${instrumentName}.png`;
+  state.instrumentName = instrumentName;
 }
 
 on("inputStart", (input) => {
+  console.log(input.button);
   if (input.player === 1 && input.pressed && input.button === "A") {
     instrument_1_element.classList.add("playing");
   }
   if (input.player === 2 && input.pressed && input.button === "A") {
     instrument_2_element.classList.add("playing");
   }
+
+  if (input.player == 1 && input.button === "B") {
+    if (instrument_chooser_1_element.classList.contains("hidden")) {
+      instrument_chooser_1_element.classList.remove("hidden");
+    } else {
+      instrument_chooser_1_element.classList.add("hidden");
+
+      const chosenInstrument = (player_1_instrument_options
+        .find((option) => option.classList.contains("instrument-chosen"))!
+        .getAttribute("data-name") ?? "trombone") as InstrumentName;
+
+      assignInstrument(chosenInstrument, player_1_state, instrument_1_element);
+    }
+  }
+  if (input.player == 2 && input.button === "B") {
+    if (instrument_chooser_2_element.classList.contains("hidden")) {
+      instrument_chooser_2_element.classList.remove("hidden");
+    } else {
+      instrument_chooser_2_element.classList.add("hidden");
+
+      const chosenInstrument = (player_2_instrument_options
+        .find((option) => option.classList.contains("instrument-chosen"))!
+        .getAttribute("data-name") ?? "trombone") as InstrumentName;
+
+      assignInstrument(chosenInstrument, player_2_state, instrument_2_element);
+    }
+  }
+
+  const isPlayer1ChooserActive =
+    !instrument_chooser_1_element.classList.contains("hidden");
+  if (input.player === 1 && input.button === "LEFT" && isPlayer1ChooserActive) {
+    const chosenIndex = player_1_instrument_options.findIndex((option) =>
+      option.classList.contains("instrument-chosen"),
+    );
+
+    if (chosenIndex === 0) {
+      player_1_instrument_options[
+        player_1_instrument_options.length - 1
+      ].classList.add("instrument-chosen");
+    } else {
+      player_1_instrument_options[chosenIndex - 1].classList.add(
+        "instrument-chosen",
+      );
+    }
+
+    player_1_instrument_options[chosenIndex].classList.remove(
+      "instrument-chosen",
+    );
+  }
+  if (
+    input.player === 1 &&
+    input.button === "RIGHT" &&
+    isPlayer1ChooserActive
+  ) {
+    const chosenIndex = player_1_instrument_options.findIndex((option) =>
+      option.classList.contains("instrument-chosen"),
+    );
+
+    if (chosenIndex === player_1_instrument_options.length - 1) {
+      player_1_instrument_options[0].classList.add("instrument-chosen");
+    } else {
+      player_1_instrument_options[chosenIndex + 1].classList.add(
+        "instrument-chosen",
+      );
+    }
+
+    player_1_instrument_options[chosenIndex].classList.remove(
+      "instrument-chosen",
+    );
+  }
+
+  const isPlayer2ChooserActive =
+    !instrument_chooser_2_element.classList.contains("hidden");
+  if (input.player === 2 && input.button === "LEFT" && isPlayer2ChooserActive) {
+    const chosenIndex = player_2_instrument_options.findIndex((option) =>
+      option.classList.contains("instrument-chosen"),
+    );
+
+    if (chosenIndex === 0) {
+      player_2_instrument_options[
+        player_2_instrument_options.length - 1
+      ].classList.add("instrument-chosen");
+    } else {
+      player_2_instrument_options[chosenIndex - 1].classList.add(
+        "instrument-chosen",
+      );
+    }
+
+    player_2_instrument_options[chosenIndex].classList.remove(
+      "instrument-chosen",
+    );
+  }
+  if (
+    input.player === 2 &&
+    input.button === "RIGHT" &&
+    isPlayer2ChooserActive
+  ) {
+    const chosenIndex = player_2_instrument_options.findIndex((option) =>
+      option.classList.contains("instrument-chosen"),
+    );
+
+    if (chosenIndex === player_2_instrument_options.length - 1) {
+      player_2_instrument_options[0].classList.add("instrument-chosen");
+    } else {
+      player_2_instrument_options[chosenIndex + 1].classList.add(
+        "instrument-chosen",
+      );
+    }
+
+    player_2_instrument_options[chosenIndex].classList.remove(
+      "instrument-chosen",
+    );
+  }
 });
 
 on("inputEnd", (input) => {
   if (input.player === 1 && !input.pressed && input.button === "A") {
     instrument_1_element.classList.remove("playing");
-    const frequency = positionToFrequency(player_1_state.position);
+    const frequency = positionToFrequency(
+      player_1_state.position,
+      player_1_state.instrumentName,
+    );
     player_1_state.instrument?.triggerRelease(frequency);
   }
 
   if (input.player === 2 && !input.pressed && input.button === "A") {
     instrument_2_element.classList.remove("playing");
-    const frequency = positionToFrequency(player_2_state.position);
+    const frequency = positionToFrequency(
+      player_2_state.position,
+      player_2_state.instrumentName,
+    );
     player_2_state.instrument?.triggerRelease(frequency);
   }
 });
@@ -85,27 +263,8 @@ function update() {
       Tone.start();
       overlay.remove();
 
-      player_1_state.instrument = new Tone.Sampler({
-        urls: TROMBONE_URLS,
-        onerror: (err) => {
-          console.log(err);
-        },
-        onload: () => {
-          console.log("loaded!");
-        },
-        volume: 0.5,
-      }).toDestination();
-
-      player_2_state.instrument = new Tone.Sampler({
-        urls: TROMBONE_URLS,
-        onerror: (err) => {
-          console.log(err);
-        },
-        onload: () => {
-          console.log("loaded!");
-        },
-        volume: 0.5,
-      }).toDestination();
+      assignInstrument("trombone", player_1_state, instrument_1_element);
+      assignInstrument("trombone", player_2_state, instrument_2_element);
     }
   } else {
     player_1_state.previousPosition = player_1_state.position;
@@ -126,8 +285,12 @@ function update() {
     if (PLAYER_1.A && !!player_1_state.instrument) {
       const previousFrequency = positionToFrequency(
         player_1_state.previousPosition,
+        player_1_state.instrumentName,
       );
-      const currentFrequency = positionToFrequency(player_1_state.position);
+      const currentFrequency = positionToFrequency(
+        player_1_state.position,
+        player_1_state.instrumentName,
+      );
 
       player_1_state.instrument.triggerAttack(currentFrequency);
 
@@ -140,8 +303,12 @@ function update() {
     if (PLAYER_2.A && !!player_2_state.instrument) {
       const previousFrequency = positionToFrequency(
         player_2_state.previousPosition,
+        player_2_state.instrumentName,
       );
-      const currentFrequency = positionToFrequency(player_2_state.position);
+      const currentFrequency = positionToFrequency(
+        player_2_state.position,
+        player_2_state.instrumentName,
+      );
 
       player_2_state.instrument.triggerAttack(currentFrequency);
 
