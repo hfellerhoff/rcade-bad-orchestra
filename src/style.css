@@ -80,12 +80,12 @@ body {
 
 #app-1 {
     /*background: blue;*/
-    height: 122px;
+    height: 118px;
     width: 100%;
 }
 #app-2 {
     /*background: red;*/
-    height: 122px;
+    height: 118px;
     width: 100%;
 }
 
@@ -101,10 +101,11 @@ body {
     border-bottom: 1px solid white;
     font-size: 8px;
     font-family: monospace;
-    height: 18px;
+    height: 26px;
     width: 100%;
     flex: 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }

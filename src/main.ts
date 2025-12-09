@@ -11,6 +11,11 @@ import {
 } from "./instruments";
 import "./style.css";
 
+const drumAudio = document.querySelector<HTMLAudioElement>("#drums")!;
+const claps1 = document.querySelector<HTMLAudioElement>("#claps-1")!;
+const claps2 = document.querySelector<HTMLAudioElement>("#claps-2")!;
+const claps3 = document.querySelector<HTMLAudioElement>("#claps-3")!;
+
 const overlay = document.querySelector<HTMLDivElement>("#overlay")!;
 const instrument_1_element =
   document.querySelector<HTMLImageElement>("#instrument-1")!;
@@ -96,7 +101,66 @@ function assignInstrument(
   state.previousPosition = 0;
 }
 
+let areDrumsPlaying = false;
+let areClapsPlaying = false;
+let clapNumber = 0;
+let clapTimeout: null | number = null;
+
+function playNewClaps() {
+  let clapNumber = Math.ceil(Math.random() * 3);
+  console.log("playing claps", clapNumber);
+  if (clapNumber === 1) claps1.play();
+  if (clapNumber === 2) claps2.play();
+  if (clapNumber === 3) claps3.play();
+}
+
+function scheduleClaps() {
+  const FIVE_TO_TWENTY_SECONDS = (5 + Math.random() * 10) * 1000;
+
+  console.log("playing claps in", FIVE_TO_TWENTY_SECONDS);
+
+  clapTimeout = setTimeout(() => {
+    playNewClaps();
+  }, FIVE_TO_TWENTY_SECONDS);
+}
+
+claps1.onended = () => {
+  scheduleClaps();
+};
+claps2.onended = () => {
+  scheduleClaps();
+};
+claps3.onended = () => {
+  scheduleClaps();
+};
+
 on("inputStart", (input) => {
+  if (gameStarted && input.button === "ONE_PLAYER") {
+    if (areDrumsPlaying) drumAudio.pause();
+    else drumAudio.play();
+
+    areDrumsPlaying = !areDrumsPlaying;
+    return;
+  }
+
+  if (gameStarted && input.button === "TWO_PLAYER") {
+    if (areClapsPlaying) {
+      claps1.pause();
+      claps1.currentTime = 0;
+      claps2.pause();
+      claps2.currentTime = 0;
+      claps3.pause();
+      claps3.currentTime = 0;
+
+      if (clapTimeout) clearTimeout(clapTimeout);
+    } else {
+      playNewClaps();
+    }
+
+    areClapsPlaying = !areClapsPlaying;
+    return;
+  }
+
   if (input.player === 1 && input.pressed && input.button === "A") {
     instrument_1_element.classList.add("playing");
   }
