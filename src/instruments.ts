@@ -109,7 +109,15 @@ export const PITCH_MAP = {
   B8: 7902.13,
 };
 
-export type InstrumentName = "trombone" | "saxophone" | "flute" | "chair";
+export type InstrumentName =
+  | "trombone"
+  | "saxophone"
+  | "flute"
+  | "tuba"
+  | "trumpet"
+  | "bassoon"
+  | "clarinet"
+  | "chair";
 
 export const INSTRUMENT_RANGES = {
   trombone: {
@@ -127,6 +135,22 @@ export const INSTRUMENT_RANGES = {
   flute: {
     min: PITCH_MAP["C4"],
     max: PITCH_MAP["C7"],
+  },
+  tuba: {
+    min: PITCH_MAP["F1"],
+    max: PITCH_MAP["D4"],
+  },
+  trumpet: {
+    min: PITCH_MAP["F3"],
+    max: PITCH_MAP["C6"],
+  },
+  clarinet: {
+    min: PITCH_MAP["D3"],
+    max: PITCH_MAP["F#6/Gb6"],
+  },
+  bassoon: {
+    min: PITCH_MAP["G2"],
+    max: PITCH_MAP["C5"],
   },
 } as const satisfies Record<
   InstrumentName,
@@ -217,9 +241,66 @@ export const FLUTE_URLS = {
   E6: "/assets/flute/E6.ogg",
 };
 
+export const TUBA_URLS = {
+  "A#1": "/assets/tuba/As1.ogg",
+  "A#2": "/assets/tuba/As2.ogg",
+  "A#3": "/assets/tuba/As3.ogg",
+  D3: "/assets/tuba/D3.ogg",
+  D4: "/assets/tuba/D4.ogg",
+  "D#2": "/assets/tuba/Ds2.ogg",
+  F1: "/assets/tuba/F1.ogg",
+  F2: "/assets/tuba/F2.ogg",
+  F3: "/assets/tuba/F3.ogg",
+};
+
+export const TRUMPET_URLS = {
+  A3: "/assets/trumpet/A3.ogg",
+  A5: "/assets/trumpet/A5.ogg",
+  "A#4": "/assets/trumpet/As4.ogg",
+  C4: "/assets/trumpet/C4.ogg",
+  C6: "/assets/trumpet/C6.ogg",
+  D5: "/assets/trumpet/D5.ogg",
+  "D#4": "/assets/trumpet/Ds4.ogg",
+  F3: "/assets/trumpet/F3.ogg",
+  F4: "/assets/trumpet/F4.ogg",
+  F5: "/assets/trumpet/F5.ogg",
+  G4: "/assets/trumpet/G4.ogg",
+};
+
+export const CLARINET_URLS = {
+  "A#3": "/assets/clarinet/As3.ogg",
+  "A#4": "/assets/clarinet/As4.ogg",
+  "A#5": "/assets/clarinet/As5.ogg",
+  D3: "/assets/clarinet/D3.ogg",
+  D4: "/assets/clarinet/D4.ogg",
+  D5: "/assets/clarinet/D5.ogg",
+  D6: "/assets/clarinet/D6.ogg",
+  F3: "/assets/clarinet/F3.ogg",
+  F4: "/assets/clarinet/F4.ogg",
+  F5: "/assets/clarinet/F5.ogg",
+  "F#6": "/assets/clarinet/Fs6.ogg",
+};
+
+export const BASSOON_URLS = {
+  A2: "/assets/bassoon/A2.ogg",
+  A3: "/assets/bassoon/A3.ogg",
+  A4: "/assets/bassoon/A4.ogg",
+  C3: "/assets/bassoon/C3.ogg",
+  C4: "/assets/bassoon/C4.ogg",
+  C5: "/assets/bassoon/C5.ogg",
+  E4: "/assets/bassoon/E4.ogg",
+  G2: "/assets/bassoon/G2.ogg",
+  G3: "/assets/bassoon/G3.ogg",
+  G4: "/assets/bassoon/G4.ogg",
+};
+
 export const URLS_BY_INSTRUMENT = {
   trombone: TROMBONE_URLS,
   saxophone: SAXOPHONE_URLS,
   chair: FRENCH_HORN_URLS,
   flute: FLUTE_URLS,
+  tuba: TUBA_URLS,
+  trumpet: TRUMPET_URLS,
+  clarinet: CLARINET_URLS,
+  bassoon: BASSOON_URLS,
 } as const satisfies Record<InstrumentName, Record<string, string>>;

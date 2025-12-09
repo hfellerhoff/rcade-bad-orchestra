@@ -1,5 +1,4 @@
-import "./style.css";
-import { PLAYER_1, on, SYSTEM, PLAYER_2 } from "@rcade/plugin-input-classic";
+import { on, PLAYER_1, PLAYER_2, SYSTEM } from "@rcade/plugin-input-classic";
 import {
   PLAYER_1 as PLAYER_1_SPINNER,
   PLAYER_2 as PLAYER_2_SPINNER,
@@ -7,11 +6,10 @@ import {
 import * as Tone from "tone";
 import {
   INSTRUMENT_RANGES,
-  SAXOPHONE_URLS,
-  TROMBONE_URLS,
   URLS_BY_INSTRUMENT,
   type InstrumentName,
 } from "./instruments";
+import "./style.css";
 
 const overlay = document.querySelector<HTMLDivElement>("#overlay")!;
 const instrument_1_element =
